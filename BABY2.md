@@ -449,11 +449,13 @@ bloodhound
 
 Here is user amelia that we got
 ---
-![[Pasted image 20250910002715.png]]
+![Screenshot](Pasted%20image%2020250910002715.png)
+
 
 
 let’s see shortest path to domain admin
-![[Pasted image 20250910002818.png]]
+![Screenshot](Pasted%20image%2020250910002818.png)
+
 
 we have amelia which is member of **LEGACY** , it has **WriteDacl** on **GPOADM**
 
