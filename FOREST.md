@@ -220,7 +220,7 @@ bloodhound-python -u svc-alfresco -p 's3rvice' -d htb.local -v --zip -c All -dc 
 
 
 BloodHound analysis revealed a critical attack path. The group `Exchange Windows Permissions@htb.local` has `WriteDacl` privileges on the domain object, which can be leveraged to grant the `svc-alfresco` user the `DCSync` privilege, enabling full domain compromise.
-![[Pasted image 20251021010704.png]]
+![BloodHound Analysis](images/wali.png)
 
 
 ### **ACL-based Privilege Escalation to DCSync Attack**.
