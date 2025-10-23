@@ -58,7 +58,7 @@ cat /etc/hosts
 
 The web service on port 80 contained a page listing the following names: Fergus Smith, Shaun Coins, Hugo Bear, Bowie Taylor, Sophie Driver, and Steven Kerb.
 
-![[Pasted image 20251023024243.png]]
+![BloodHound Analysis](images/sauna1.png)
 
 
 The tool username-anarchy was used to generate a list of potential usernames from the provided list of names.
@@ -172,7 +172,7 @@ netexec ldap 10.129.53.151 -u 'fsmith' -p 'Thestrokes23' --bloodhound --dns-serv
 
 BloodHound analysis revealed that the user SVC_LOANMGR@EGOTISTICAL-BANK.LOCAL holds the GetChangesAll and GetChanges privileges over the domain EGOTISTICAL-BANK.LOCAL.
 
-![[Pasted image 20251023035951.png]]
+![BloodHound Analysis](images/sauna2.png)
 
 The secretsdump.py script was executed using the credentials EGOTISTICALBANK.LOCAL/svc_loanmgr:Moneymakestheworldgoround! to target the Domain Controller at 10.129.53.151. This operation successfully dumped the NTDS.dit database, extracting NTLM password hashes for all domain users.
 
