@@ -264,12 +264,12 @@ bloodhound-python -u 'mhope' -p '4n0therD4y@n0th3r$' -d 'MEGABANK.LOCAL' -c All 
 
 The user mhope has the CanPSRemote privilege, which allows PowerShell Remoting, on the host MONTEVERDE.MEGABANK.LOCAL.
 
-![[Pasted image 20251024202510.png]]
+![BloodHound Analysis](images/montervade1.png)
 
 The user mhope has the DCSync privileges, which allows for the replication of domain password data, including the ability to retrieve the NTLM password hash for the Administrator account.
 
 
-![[Pasted image 20251024202615.png]]
+![BloodHound Analysis](images/montervade2.png)
 
 An attempt to execute Mimikatz from the mhope user's desktop was blocked by antivirus software.
 
