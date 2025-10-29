@@ -89,7 +89,7 @@ g0.flight.htb.          1200    IN      AAAA    dead:beef::459a:a3e2:9dc2:b376
 Let’s start by taking a quick look at the different features of the website :
 
 
-![[Pasted image 20251027185014.png]]
+![BloodHound Analysis](images/sauna1.png)
 
 This seems to be a static page and it will not be useful. Let’s keep on our enumeration :
 
