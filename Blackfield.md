@@ -241,7 +241,7 @@ Compressing output into 20251030061645_bloodhound.zip
 
 The file  contains the usernames `support` and `AU0172020@BLACKFIELD.LOCAL`. The user `audit2020` is identified for further action.
 
-![[Pasted image 20251030103237.png]]
+![BloodHound Analysis](images/blackfield.jpg)
 
 The password for the user `audit2020` has been successfully changed to `Password123!!!` using `rpcclient`
 
