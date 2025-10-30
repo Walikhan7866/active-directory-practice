@@ -39,7 +39,7 @@ cat /etc/hosts
 ```
 
 You have obtained LDAP credentials for the user `svc-printer`. Use these credentials to authenticate and enumerate the domain. Test the credentials with `nxc ldap return.local -u svc-printer -p 'password' --users` to list domain users. You can also try to authenticate via SMB with `nxc smb return.local -u svc-printer -p 'password'` to check share access and user privileges.
-![[Pasted image 20251030021557.png]]
+![BloodHound Analysis](images/return.png)
 The connection shows a failed LDAP bind attempt from the domain controller. The credentials are `svc-printer:1edFg43012!!`. Use these valid credentials for authenticated enumeration. Run `nxc ldap return.local -u svc-printer -p '1edFg43012!!' --users` to list domain users and `nxc smb return.local -u svc-printer -p '1edFg43012!!' --shares` to access SMB shares. Check WinRM access with `nxc winrm return.local -u svc-printer -p '1edFg43012!!'` to see if you can get a shell.
 
 ```bash
