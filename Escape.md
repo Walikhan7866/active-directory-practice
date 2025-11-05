@@ -143,7 +143,7 @@ smb: \> exit
 Inside the share, a PDF file is found and downloaded
 This PDF contains credentials: `PublicUser:GuestUserCantWrite1`
 
-![[Pasted image 20251105022559.png]]
+![BloodHound Analysis](images/escape.png)
 ### Phase 3: Credential Testing & Service Enumeration
 
 **1. Test New Credentials on SMB**
