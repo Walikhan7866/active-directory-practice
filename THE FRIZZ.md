@@ -71,10 +71,10 @@ echo '10.129.68.104  frizzdc.frizz.htb frizz.htb' | sudo tee -a /etc/hosts >/dev
 Accessing port 80 reveals a web application for Walkerville Elementary School , which shows the
 school's offerings and includes a staff login.
 
-![[Pasted image 20251107094656.png]]
+![BloodHound Analysis](images/frizz1.png)
 This page offers no useful content; the only option available is a **Staff Login** link located in the upper right corner.
 
-![[Pasted image 20251107094803.png]]
+![BloodHound Analysis](images/frizz2.png)
 
 Clicking on the **Staff Login** redirects to a login page, but we currently do not have valid credentials to proceed with testing. When clicking on Staff Login , we are redirected to a Gibbon-LMS instance, which includes a notice about
 why Gibbon-LMS is in use.
@@ -185,7 +185,7 @@ gibbonPersonID  title   surname firstName       preferredName   officialName    
 ```
 
 from the output, we can see a password hash and a password salt
-![[Pasted image 20251107050901.png]]
+![BloodHound Analysis](images/frizz3.png)
 
 We take those and plug them into Hashcat for cracking. For a hash and salt mode, 1420 is used as instructed here.
 ```bash
