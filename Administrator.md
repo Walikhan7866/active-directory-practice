@@ -81,15 +81,15 @@ Compressing output into 20251108105335_bloodhound.zip
 
 The BloodHound data reveals a critical privilege escalation path. The user Olivia possesses the GenericAll permission over the user Michael. The GenericAll privilege is a powerful access right that grants full control, allowing Olivia to modify Michael's attributes, including resetting his password. This control can be leveraged to assume Michael's identity and potentially gain access to any resources or permissions assigned to his account.
 
-![[Pasted image 20251108111028.png]]
+![BloodHound Analysis](images/Administrator1.png)
 
 The BloodHood data shows a further privilege escalation path. The user Michael has the ForceChangePassword permission over the user Benjamin. This privilege allows Michael to reset Benjamin's password without needing to know the current one. By exploiting this, an attacker can change Benjamin's password, effectively compromising the account and gaining access to all of Benjamin's group memberships and assigned permissions.
 
-![[Pasted image 20251108110851.png]]
+![BloodHound Analysis](images/Administrator2.png)
 
 The BloodHound data indicates that the user Benjamin is a member of the SHARE MODERATORS group. This group membership is significant as it grants Benjamin all privileges and access rights associated with the SHARE MODERATORS group. The permissions of this group should be investigated further to determine if it provides any elevated access to network shares or other domain resources that could be leveraged for further lateral movement or privilege escalation.
 
-![[Pasted image 20251108111314.png]]
+![BloodHound Analysis](images/Administrator3.png)
 
 The bloodyAD command was used to perform a password reset attack. Authenticating to the domain controller as the user olivia, the tool successfully changed the password for the user MICHAEL to a new known value, 'Password123!'. This action was possible due to the previously identified GenericAll permission that olivia held over the MICHAEL user account, demonstrating the exploitation of this excessive permission to compromise a second user.
 
@@ -197,11 +197,11 @@ pwsafe
 
 The image shows the Password Safe application interface prompting for the master password to unlock the Backup.psafe3 database file located on the Kali desktop. The "Open as read-only" option is available. The next step is to enter the cracked master password "tekieromucho" to gain access to the stored credentials within the vault.
 
-![[administrator5.jpg]]
+![BloodHound Analysis](images/Administrator4.png)
 
 The Password Safe vault has been successfully unlocked with the master password. The interface displays three stored credential entries for users Alexander Smith, Emily Rodriguez, and Emma Johnson, each with an associated username in brackets. The presence of these credentials within the database provides a new set of potential accounts that can be used for further authentication attempts and lateral movement within the domain.
 
-![[administrator6.jpg]]
+![BloodHound Analysis](images/Administrator5.png)
 
 The command displays the contents of a file named users.txt, which contains the three usernames extracted from the Password Safe vault: alexander, emily, and emma. This file is likely being prepared for use in a subsequent attack, such as a password spraying campaign, to test these discovered usernames against the domain.
 
@@ -255,11 +255,11 @@ bloodhound-python -u 'emily' -p 'UXLCI5iETUsIBoFVTj8yQFKoHjXmb' -d 'administrato
 
 The BloodHound data reveals that the user Emily possesses the GenericWrite permission over the user Ethan. The GenericWrite privilege allows Emily to write to non-protected attributes of the Ethan user object. This can be abused for privilege escalation, notably through techniques such as writing a script to the target's logon script attribute or configuring credential delegation settings, which could lead to compromising the Ethan account.
 
-![[Pasted image 20251108125256.png]]
+![BloodHound Analysis](images/Administrator6.png)
 
 The BloodHound interface provides explicit guidance on how to abuse the GenericWrite permission held by Emily over Ethan. It recommends using a Targeted Kerberoast attack, which can be performed with the targetedKerberoast.py tool. This attack would allow Emily to request an encrypted Kerberos ticket for Ethan's account, provided Ethan has a Service Principal Name, and obtain a crackable hash for offline password cracking, potentially leading to a full compromise of the Ethan account.
 
-![[Pasted image 20251108125400.png]]
+![BloodHound Analysis](images/Administrator7.png)
 
 
 The command sudo git clone [https://github.com/ShutdownRepo/targetedKerberoast.git](https://github.com/ShutdownRepo/targetedKerberoast.git) was executed to download the targetedKerberoast toolkit from its GitHub repository. This tool is required to perform the Targeted Kerberoast attack identified as the viable exploitation path for the GenericWrite permission that the user emily holds over the user ethan.
@@ -319,7 +319,7 @@ Session completed.
 
 The BloodHound data reveals that the user Ethan possesses significant privileges over the domain. Specifically, Ethan has the DCSync privileges, indicated by the GetChangeAll, GetChanges, and GetChangeInFilteredSet permissions on the administrator.htb domain object. The DCSync permission allows a user to mimic the behavior of a Domain Controller and synchronize replication data, which includes the ability to retrieve the password hashes for all domain users.
 
-![[Pasted image 20251108132551.png]]
+![BloodHound Analysis](images/Administrator8.png)
 
 The secretsdump.py tool was executed using the compromised ethan credentials with the DCSync permission. The command specifically targeted the Domain Administrator account, successfully retrieving its NTLM password hash, which is aad3b435b51404eeaad3b435b51404ee:3dc553ce4b9fd20bd016e098d2d2fd2e, along with its Kerberos keys. This NTLM hash can be used for Pass-the-Hash attacks to gain administrative access to the domain.
 
