@@ -197,11 +197,11 @@ pwsafe
 
 The image shows the Password Safe application interface prompting for the master password to unlock the Backup.psafe3 database file located on the Kali desktop. The "Open as read-only" option is available. The next step is to enter the cracked master password "tekieromucho" to gain access to the stored credentials within the vault.
 
-![BloodHound Analysis](images/Administrator4.png)
+![BloodHound Analysis](images/Administrator4.jpg)
 
 The Password Safe vault has been successfully unlocked with the master password. The interface displays three stored credential entries for users Alexander Smith, Emily Rodriguez, and Emma Johnson, each with an associated username in brackets. The presence of these credentials within the database provides a new set of potential accounts that can be used for further authentication attempts and lateral movement within the domain.
 
-![BloodHound Analysis](images/Administrator5.png)
+![BloodHound Analysis](images/Administrator5.jpg)
 
 The command displays the contents of a file named users.txt, which contains the three usernames extracted from the Password Safe vault: alexander, emily, and emma. This file is likely being prepared for use in a subsequent attack, such as a password spraying campaign, to test these discovered usernames against the domain.
 
