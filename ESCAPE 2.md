@@ -371,11 +371,11 @@ Compressing output into 20251109131052_bloodhound.zip
 
 The BloodHound analysis reveals a critical attack path. The user RYAN@SEQUEL.HTB has the WriteOwner permission over the user object CA_SVC@SEQUEL.HTB. This privilege allows Ryan to change the owner of the CA_SVC user object to himself, after which he could modify the account's properties, including resetting its password. This constitutes a privilege escalation vector where the compromised Ryan account can take control of the CA_SVC account.
 
-![[Pasted image 20251109131831.png]]
+![BloodHound Analysis](images/Escape2(1).png)
 
 The BloodHound analysis identifies that the user RYAN@SEQUEL.HTB has the ForceChangePassword permission over the user object CA_SVC@SEQUEL.HTB. This privilege allows Ryan to change the CA_SVC account's password without knowing the current one. This is a more direct privilege escalation vector than WriteOwner, as it immediately grants control over the CA_SVC account by setting a new password of the attacker's choice.
 
-![[Pasted image 20251109131945.png]]
+![BloodHound Analysis](images/Escape2(2).png)
 
 The command 'uv add --script targetedKerberoast.py -r requirements.txt' uses the uv package manager to install the targetedKerberoast.py script and its dependencies. This tool is designed to perform a targeted Kerberoasting attack, which requests Kerberos service tickets for specific user accounts that have Service Principal Names (SPNs) set. The script has been successfully updated and is now ready for execution to attempt to retrieve crackable hashes for privileged accounts.
 
