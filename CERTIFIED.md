@@ -129,9 +129,8 @@ Compressing output into 20251110105406_bloodhound.zip
 
 ```
 
-The image certified1.png illustrates that the user MANAGEMENT_SVC@CERTIFIED.HTB possesses two critical Active Directory privileges over another object: WriteOwner and GenericWrite. The WriteOwner privilege allows the user to change the ownership of the target object, while the GenericWrite privilege permits the modification of any attribute on the target object.
-
-![[Pasted image 20251110110615.png]]
+The image certified1.png illustrates that the user MANAGEMENT_SVC@CERTIFIED.HTB possesses two critical Active Directory privileges over another object: WriteOwner and GenericWrite. The WriteOwner privilege allows the user to change the ownership of the target object, while the GenericWrite privilege permits the modification of any attribute on the target object
+![BloodHound Analysis](images/certified1.png)
 
 the Python script owneredit.py was executed to modify the ownership of the management_svc account using the judith.mader credentials. The operation successfully changed the owner SID to S-1-5-21-729746778-2675978091-3820388244-1103, which corresponds to the user judith.mader, effectively granting judith.mader ownership rights over the management_svc account.
 
