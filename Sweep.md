@@ -42,7 +42,7 @@ PORT      STATE SERVICE           REASON          VERSION
 
 I discovered that Lansweeper was running on port 81:
 
-![[Pasted image 20250924235020.png]]
+![BloodHound Analysis](images/sweep1.png)
 
 
 Initial Access
@@ -124,7 +124,7 @@ impacket-lookupsid sweeper.vl/xyz:''@sweeper.vl -target 10.10.125.29 -no-pass
 The ‘intern’ account looked suspicious. I tried using the credentials ‘intern:intern’ on the Lansweeper login page and gained access:
 
 
-![[Pasted image 20250925000233.png]]
+![BloodHound Analysis](images/sweep2.png)
 
 ## Privilege Escalation - User
 
@@ -209,7 +209,7 @@ lets copy this  on current directory
 cp /home/kali/.nxc/logs/INVENTORY_10.10.125.29_2025-09-24_190859_bloodhound.zip .
 ```
 
-![[Pasted image 20250925002318.png]]
+![BloodHound Analysis](images/sweep3.png)
 
 Two accounts stood out as particularly interesting: `svc_inventory_lnx` and `jgre808`
 
@@ -218,15 +218,18 @@ Two accounts stood out as particularly interesting: `svc_inventory_lnx` and `
 After logging in with intern:intern credentials, I explored the Lansweeper dashboard. I noticed that the account for Linux scanning had valid credentials, so I created a plan to intercept these credentials.  
 First, I created a scanning target pointing to my attack machine:
 
-![[Pasted image 20250925010706.png]]
+![BloodHound Analysis](images/sweep4.png)
 
 
-Then I set up a new mapping credential that would cause the Linux scan service account to connect to ![[Pasted image 20250925010753.png]]
+Then I set up a new mapping credential that would cause the Linux scan service account to connect to 
+
+![BloodHound Analysis](images/sweep5.png)
+
 machine:
 
 I also ensured my machine was marked as a Linux asset in the system:
 
-![[Pasted image 20250925010831.png]]
+![BloodHound Analysis](images/sweep6.png)
 
 Using [fakessh](https://github.com/fffaraz/fakessh) tool, I captured the username and password of the scanning service account when it attempted to connect to my machine:
 
