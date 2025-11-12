@@ -237,10 +237,13 @@ xfreerdp /u:administrator /p:'XZ9i=bgA8KhRP.f=jr**Qgd3Qh@n9dRF' /w:1566 /h:968 /
 ```
 
 From the nmap scan output of lusdc host, we found that there was a web server running on port 80, and 443. Upon browsing the port 80, [http://lusdc.lustrous.vl](http://lusdc.lustrous.vl/) on browser, we were greeted with a login prompt, meaning that the web app was using the Kerberos authentication.
-![[Pasted image 20251003012336.png]]
+
+![BloodHound Analysis](images/lustrous1.png)
 
 As we already got some credentials, we could login to the application. Used ben.cox credentials to login, and browsing around the application didn’t find anything useful.
-![[Pasted image 20251003012418.png]]
+
+![BloodHound Analysis](images/lustrous2.png)
+
 So I decide to do user enumeration within the Active Directory, and launched a cmd.exe instance in the context of ben.cox using **runas** command.
 
 ```bash
