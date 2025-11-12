@@ -350,7 +350,7 @@ cp /home/kali/.nxc/logs/DC_10.10.91.145_2025-09-25_111943_bloodhound.zip .
 
 Thomas.Powell is a member of `Support` group has `GenericAll` on `ADMSVC` group which has `ReadGMSAPassword` on `MGTSVC$` account. We'll need to add thomas in ADMSVC group, read the NThash of MGTSVC account
 
-![[Pasted image 20250925163111.png]]
+![BloodHound Analysis](images/sendai1.png)
 
 
 ## Abusing GenericAll and reading GMSA password
@@ -479,7 +479,7 @@ cp /home/kali/.nxc/logs/DC_10.10.91.145_2025-09-25_125151_bloodhound.zip .
 we see that
 
 
-![[Pasted image 20250925175508.png]]
+![BloodHound Analysis](images/sendai2.png)
 
 ## Privilege Escalation via ESC4 — Clifford.Davey’s Golden Ticket
 
