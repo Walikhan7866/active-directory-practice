@@ -530,7 +530,7 @@ bloodhound
 There is nothing interesting about dorothy.rose, but if we check the outbound object control that abbie.smith has…
 
 
-![[Pasted image 20251001024021.png]]
+![BloodHound Analysis](images/reflection1.png)
 Abbie has “GenericAll” over MS01! This, in theory, should allow us to perform a resource-based constrained delegation attack.
 
 Since Abbie has “GenericAll”, she can configure who is allowed to delegate to MS01. But, she can only give that right to accounts that have an SPN configured in their name.
@@ -563,9 +563,9 @@ At this point, I spent some time looking into “SPNless RBCD” but everything 
 ### LAPS
 
 If we click on the “MS01” node in bloodhound, we can see what GPOs affect this object:
-![[Pasted image 20251001024740.png]]
+![BloodHound Analysis](images/reflection2.png)
 
-![[Pasted image 20251001024759.png]]
+![BloodHound Analysis](images/reflection3.png)
 
 We can see that there is a GPO called “LAPS_POLICY”.
 
@@ -659,7 +659,9 @@ Then, from DPAPI we get the clear-text password of “Georgia.Price”, since sh
 
 If we check Georgia’s outbound object control in bloodhound, we can see that she has GenericAll over WS01:
 
-![[Pasted image 20251001031306.png]]
+![BloodHound Analysis](images/reflection4.png)
+
+
 LAPS isn’t configured for WS01, so we can’t replicate what we did with MS01.
 
 ```bash
