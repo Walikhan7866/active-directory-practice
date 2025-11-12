@@ -135,11 +135,11 @@ Compressing output into 20251111145410_bloodhound.zip
 
 The BloodHound data analysis reveals that the user LEVI.JAMES@PUPPY.HTB is a member of the DEVELOPERS@PUPPY.HTB group. Furthermore, the DEVELOPERS group has GenericWrite permissions over the HR@PUPPY.HTB group. The GenericWrite privilege allows the members of the DEVELOPERS group to modify attributes of the HR group object, including its membership. This permission can be leveraged to add a user, such as levi.james, directly to the HR group, potentially granting them additional access rights within the domain.
 
-![[Pasted image 20251111150805.png]]
+![BloodHound Analysis](images/puppy1.png)
 
 The BloodHound data shows the membership of the DEVELOPERS@PUPPY.HTB group. The group contains two users: ADAM.SILVER@PUPPY.HTB and ANT.EDWARDS@PUPPY.HTB. This confirms that levi.james is not a direct member of the DEVELOPERS group but possesses control over it via another relationship, as previously identified.
 
-![[Pasted image 20251111150533.png]]
+![BloodHound Analysis](images/puppy2.png)
 
 The net rpc command is used to add the user LEVI.JAMES to the DEVELOPERS group. This operation leverages the SMB protocol to perform a remote group membership modification. The command authenticates to the target domain controller at 10.129.232.75 using the supplied credentials. Successfully adding the user to this group would grant them any permissions associated with the DEVELOPERS group, which includes the previously identified GenericWrite privilege over the HR group.
 
@@ -233,7 +233,7 @@ keepassxc recovery.kbdx
 
 The KeePassXC database has been successfully unlocked, revealing multiple stored entries for domain users including ADAM SILVER, ANTONY EDWARDS, JAMIE WILLIAMS, SAMUEL, and STEVE T. The interface displays the general information tab for the ADAM SILVER entry, showing the username field is populated and the password field is currently concealed. The next step would be to view the actual password values for these entries to obtain additional domain credentials.
 
-![[Pasted image 20251111182238.png]]
+![BloodHound Analysis](images/puppy3.png)
 
 The files users.txt and password.txt have been created, containing a consolidated list of usernames and their corresponding passwords extracted from the KeePass database. The list includes the newly discovered users ANTONY C. EDWARDS, JAMIE WILLIAMSON, SAMUEL BLAKE, and STEVE TUCKER along with their credentials. This comprehensive credential dump provides multiple authenticated access vectors to the domain for further exploitation.
 
@@ -328,7 +328,7 @@ smb: \> exit
 The BloodHound data reveals that the user ANT.EDWARDS@PUPPY.HTB is a member of the SENIOR DEVS@PUPPY.HTB group. This group membership explains the elevated WRITE permissions on the DEV share that were previously observed. The SENIOR DEVS group also contains ADAM.SILVER@PUPPY.HTB as a member, indicating both users share the same level of resource access privileges.
 
 
-![[Pasted image 20251111185058.png]]
+![BloodHound Analysis](images/puppy4.png)
 
 The bloodyAD command was used to reset the password for the user ADAM.SILVER to a new value 'Password1234!'. This operation was performed with the authenticated credentials of ant.edwards, leveraging the user's privileges within the domain to modify another user's account attributes. The password change was successful, providing control over the ADAM.SILVER account.
 
