@@ -156,10 +156,12 @@ Content-Type: text/html; charset=UTF-8
 ```
 
 On visiting any of the pages, it’s going to take the html page name as a GET parameter `view`
-![[Pasted image 20250926151246.png]]
+
+![BloodHound Analysis](images/trusted1.png)
+
 So here we can try Local File Inclusion (LFI) to see if any of the local files get included
 
-![[Pasted image 20250926151700.png]]
+![BloodHound Analysis](images/trusted2.png)
 We can check the source of index.html file by using `php://filter` to encode the file contents in base64 as it might have php code which gets executed if it's in plain text
 ```bash
 curl -i http://10.10.151.214/dev/index.html?view=php://filter/read=convert.base64-encode/resource=db.php
@@ -254,7 +256,10 @@ MariaDB [news]> select * from users;
 ```
 
 On trying to crack these hashes with Crack station
-![[Pasted image 20250926154102.png]]
+
+![BloodHound Analysis](images/trusted3.png)
+
+
 We can check if these credentials works on the target machine with `netexec`
 
 ```bash
@@ -369,7 +374,7 @@ bloodhound
 
 Running bloodhound-GUI and uplading the json files we got from python-bloodhound, we can see a path from `rsmith` to `ewalters` by having `ForceChangePassword` on ewalters, we can change the password and login by either WinRM or RDP since it has `CanPSRemote` permissions on the host
 
-![[Pasted image 20250927013241.png]]
+![BloodHound Analysis](images/trusted4.png)
 
 Through `rpcclient`, ewalters's password can be changed
 
@@ -792,7 +797,7 @@ we get the root shell
 
 
 
-![[Pasted image 20250929080508.png]]
+![BloodHound Analysis](images/trusted5.png)
 
 
 
