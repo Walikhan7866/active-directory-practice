@@ -581,7 +581,7 @@ SMB         10.10.253.117   445    MUCDC            [+] heron.vl\adm_prju:ayDMWV
 
 Checking for paths for gaining domain, this user is in `Admins_T1` group which has `WriteAccountRestrictions` acl on domain controller, which essentially is similar to GenericWrite or WriteProperty that can allow to edit `msDS-AllowedToActOnBehalfOfOtherIdentity` adding a machine account for which we have password for abusing resource based delegation (RBCD)
 
-![[Pasted image 20251005145211.png]]
+![BloodHound Analysis](images/HERON.png)
 We can do this attack in two ways, since we have the NThash of frajmp, we can append that account in dc’s property or we can utilize a user account without having any SPN by replacing the password with it’s TGT session and combining S4U2Self and U2U protocols to abuse but this method is quite destructive and must be avoided unless there’s a test account
 
 Going with the machine account approach, by first editing the property
