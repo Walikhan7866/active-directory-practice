@@ -245,7 +245,7 @@ The bloodhound-python command was executed to collect Active Directory reconnais
 
 The BloodHound analysis reveals a critical attack path. The compromised service account SVC_LDAP@VOLEUR.HTB has the WriteSPN permission over the SECOND-LINE SUPPORT TECHNICIANS group. Furthermore, the RESTORE_USERS group has GenericWrite permissions over the SVC_WINRM account. These privileges can be leveraged for a targeted Kerberos attack, specifically to manipulate Service Principal Names, and to modify the properties of the SVC_WINRM account, potentially enabling further credential compromise.
 
-![[Pasted image 20251114195843.png]]
+![BloodHound Analysis](images/voleeur1.png)
 
 The bloodyAD tool was used to exploit the WriteSPN privilege. Authenticated as the svc_ldap user, the command successfully modified the servicePrincipalName attribute of the svc_winrm account, setting it to 'http/whatever'. This action is a prerequisite for performing a Kerberos Silver Ticket attack or a targeted Kerberoasting attack against the svc_winrm account.
 
