@@ -199,7 +199,7 @@ The BloodHound data file was uploaded into the running Neo4j database via the co
 
 The BloodHound analysis, as illustrated in the referenced graph, reveals a critical attack path. The compromised svc_mssql account has GenericAll privileges over the SVC_HELPDESK account. This powerful permission allows for the modification of the target account's attributes, including the resetting of its password. Furthermore, the graph indicates that the SVC_HELPDESK account is a member of privileged groups, specifically identifying a path to the Domain Admins group via nested group membership. This relationship chain presents a direct privilege escalation vector from the svc_mssql service account to full domain compromise.
 
-![[Pasted image 20251207142306.png]]
+![BloodHound Analysis](images/nagoya1.png)
 
 Using the compromised credentials for craig.carr, the bloodyAD tool was used to perform an authenticated password reset on the SVC_HELPDESK account. The operation was successful, changing the account's password to 'Password1234!'. This action directly exploits the GenericAll permission identified in BloodHound, granting control over a service account that is a member of privileged groups, thereby achieving a significant escalation of privileges within the domain.
 
@@ -212,7 +212,7 @@ bloodyAD --host 192.168.200.21 -d NAGOYA-INDUSTRIES.COM -u 'craig.carr' -p 'Spri
 
 Post-exploitation BloodHound analysis confirms the successful compromise. The graph visualization shows that the SVC_HELPDESK account, now under our control, has direct membership in the Domain Admins group. This membership grants full administrative authority over the entire [nagoya-industries.com](https://nagoya-industries.com/) domain, enabling unrestricted access to all domain-joined systems, the ability to create and modify any user or group, and complete control over the domain's security policy.
 
-![[Pasted image 20251207144253.png]]
+![BloodHound Analysis](images/nagoya2.png)
 
 Leveraging the newly acquired Domain Admin privileges via the SVC_HELPDESK account, the password for the user christopher.lewis was reset to 'Password12345!' using bloodyAD. This action demonstrates the established domain dominance, as a member of the Domain Admins group possesses the inherent ability to modify any attribute of any object in the domain, including the passwords of all user accounts, confirming full administrative control over the Active Directory environment.
 
@@ -225,7 +225,7 @@ bloodyAD --host 192.168.200.21 -d NAGOYA-INDUSTRIES.COM -u 'SVC_HELPDESK' -p 'Pa
 The final BloodHound graph analysis confirms the extent of the compromise and the established attack path. The visualization shows the SVC_HELPDESK account as a member of the Domain Admins group, with subsequent GenericAll permissions over other accounts. The successful password reset of christopher.lewis, another domain user, was executed from this position of privilege. This confirms a complete privilege escalation chain from the initial svc_mssql service account compromise to full, unrestricted domain administrative control, allowing for the modification of any account or object within the [nagoya-industries.com](https://nagoya-industries.com/) forest.
 
 
-![[Pasted image 20251207144806.png]]
+![BloodHound Analysis](images/nagoya3.png)
 
 A remote shell was established on the target domain controller using Evil-WinRM with the compromised credentials for the christopher.lewis account, which holds Domain Admin privileges. The command successfully accessed the system and retrieved the contents of the local flag file, obtaining the hash b59e8dd7face199328a54ccae12a74b5. This action confirms the ability to execute arbitrary commands with the highest level of authority, demonstrating a full domain compromise and the capability to access, exfiltrate, or modify any data on the domain controller.
 
@@ -398,7 +398,7 @@ xp_cmdshell powershell C:\\programdata\\rev.ps1
 A reverse shell connection was successfully received, providing an interactive PowerShell session on the domain controller. The shell is running under the context of the svc_mssql service account, as confirmed by the whoami command. This demonstrates the successful chain of exploitation: forging a Silver Ticket, enabling xp_cmdshell, and achieving remote code execution, resulting in a persistent foothold on the primary domain controller with the privileges of a domain service account.
 
 
-![[Pasted image 20251207193810.png]]
+![BloodHound Analysis](images/nagoya4.png)
 
 As shown above, I now have a shell on the box as the ‘svc_msssql’ user.
 
@@ -406,7 +406,7 @@ As shown above, I now have a shell on the box as the ‘svc_msssql’ user.
 
 The privileges assigned to the svc_mssql service account were enumerated. The account possesses the critical SeImpersonatePrivilege, which is enabled. This privilege is a well-known avenue for local privilege escalation, allowing for token impersonation attacks such as Juicy Potato, PrintSpoofer, or RoguePotato. This finding indicates the potential to elevate privileges from the svc_mssql service account context to NT AUTHORITY\SYSTEM on the domain controller itself.
 
-![[Pasted image 20251207193855.png]]
+![BloodHound Analysis](images/nagoya5.png)
 
 A simple HTTP server was started on port 80 of the attacker's machine. This server is used to host tools and payloads, such as privilege escalation exploits or enumeration scripts, allowing them to be easily downloaded and executed on the compromised domain controller via the established command shell for further post-exploitation activities.
 
@@ -432,12 +432,5 @@ rlwrap nc -lvnp 9002
 
 The GodPotato exploit was executed, successfully leveraging the SeImpersonatePrivilege to spawn a reverse shell as NT AUTHORITY\SYSTEM. The shell connected back to the attacker's listener on port 9002. The whoami command confirmed the highest level of privilege on the Windows operating system has been achieved, granting complete control over the domain controller, including the ability to dump credential databases, modify domain trusts, and persist access indefinitely.
 
-![[Pasted image 20251207194321.png]]
+![BloodHound Analysis](images/nagoya6.png)
 
-
-
-
-```bash
-
-
-```
