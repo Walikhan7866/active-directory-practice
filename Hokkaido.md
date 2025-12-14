@@ -417,7 +417,7 @@ INFO: Compressing output into 20251210190501_bloodhound.zip
 
 The output references a file or BloodHound data indicating the "HRAPP-SERVICE" account has the "GenericWrite" permission over the "HAZEL GREEN" user object in Active Directory, which can be abused for targeted attacks like password reset or Shadow Credentials.
 
-![[Pasted image 20251210191336.png]]
+![BloodHound Analysis](images/hokkadu.png)
 
 Capturing the Kerberos hash for the user "Hazel.Green" from the earlier BloodHound data for offline cracking or pass-the-hash attacks.
 
