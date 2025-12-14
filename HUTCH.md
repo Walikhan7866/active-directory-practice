@@ -120,7 +120,7 @@ This command used a local BloodHound CLI utility to upload the previously collec
 
 The file "Hutch.png" was examined and found to contain what appears to be cleartext credentials. The content lists `ReadLAPSPassword` followed by the username `FMCSORLEY@HUTCH.OFFSEC` and a corresponding password `HUTCHDC.HUTCH.OFFSEC`. This constitutes a second set of valid domain credentials for the same user account, `fmcsorley`, with an alternative password. This discovery underscores poor security practices, such as storing passwords in unsecured image files, and provides an additional authentication vector for the already compromised account.
 
-![[Pasted image 20251214223439.png]]
+![BloodHound Analysis](images/Hutch.png)
 
 This command utilized the bloodyAD tool to perform an authenticated LDAP query for the LAPS (Local Administrator Password Solution) attributes. Using the compromised `fmcsorley` credentials, the query specifically searched for objects with the `ms-mcs-admpwdexpirationtime` attribute set, which is indicative of LAPS-managed accounts. The query successfully retrieved the LAPS-managed local administrator password for the domain controller `HUTCHDC`. The plaintext password `;e&G1!3%s8/ER,` and its expiration timestamp were exposed. This represents a critical compromise, granting administrative access to the domain controller itself, and is a direct path to full domain control.
 
