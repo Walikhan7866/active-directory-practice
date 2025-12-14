@@ -144,7 +144,7 @@ The bloodhound-cli tool was executed with the "up" command. This action uploaded
 
 The BloodHound analysis identified that the compromised user "ANIRUDH@VAULT.OFFSEC" possesses the "GenericWrite" and "WriteOwner" permissions over another principal, such as a user or group. These are powerful Active Directory permissions. "GenericWrite" allows modification of the target object's attributes, while "WriteOwner" allows the attacker to change the object's owner to themselves. This privilege can be leveraged for targeted attribute modification, such as setting a script path on a user, or directly for privilege escalation by taking ownership of a high-privileged account or group.
 
-![[Pasted image 20251214003107.png]]
+![BloodHound Analysis](images/vault.png)
 
 A successful remote connection was established to the target Domain Controller using Evil-WinRM. The connection authenticated with the credentials for the user "anirudh" and the cracked password "SecureHM". The hash displayed in the output is the NTLM hash of the user's password, confirming authentication. This provides an interactive command-line shell on the target system with the privileges of the "anirudh" user account.
 
