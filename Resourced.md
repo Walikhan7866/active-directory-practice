@@ -251,7 +251,7 @@ The BloodHound CLI tool was executed to process and upload the collected zip fil
 
 The file `resourced.png` appears to contain a graphic representation of the BloodHound analysis. It shows the domain `RESOURCED.LOCAL` and highlights the user `L.LIVINGSTONE@RESOURCED.LOCAL`. The analysis typically visualizes attack paths, such as privilege escalation, lateral movement, or domain compromise routes related to this account
 
-![[Pasted image 20251215200317.png]]
+![BloodHound Analysis](images/resourced.png)
 
 The StandIn.exe tool was executed to create a new computer object named `FakeComputer02` within the domain. The attack successfully added the machine account to the `CN=Computers` container with an automatically generated password `JuzPwTZwRfiwnFo`. This demonstrates the ability to create unauthorized domain-joined computer accounts.
 
